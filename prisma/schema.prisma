@@ -1,0 +1,207 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                Int     @id @default(autoincrement())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique @map("session_token") @db.VarChar(255)
+  userId       Int      @map("user_id")
+  expires      DateTime
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expires])
+  @@map("sessions")
+}
+
+enum Role {
+  ADMIN
+  USER
+  MODERATOR
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String?   @unique @db.VarChar(255)
+  passwordHash  String?   @map("password_hash") @db.VarChar(255)
+  email         String?   @unique @db.VarChar(255)
+  emailVerified DateTime? @map("email_verified")
+  image         String?   @db.Text
+  role          Role      @default(USER)
+  isActive      Boolean   @default(true) @map("is_active")
+  lastLoginAt   DateTime? @map("last_login_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  accounts Account[]
+  sessions Session[]
+
+  @@index([email])
+  @@index([role])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String   @db.VarChar(255)
+  token      String   @unique @db.VarChar(255)
+  expires    DateTime
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@unique([identifier, token])
+  @@index([expires])
+  @@map("verification_tokens")
+}
+
+// Product Related
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)  @unique
+  description String   @db.Text
+  price       Int // in smallest currency unit, e.g. rupiah
+  stock       Int
+  isArchived  Boolean  @default(false)
+  isFeatured  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  colorId Int
+  color   Color @relation(fields: [colorId], references: [id])
+
+  sizeId Int
+  size   Size @relation(fields: [sizeId], references: [id])
+
+  images      Image[]
+  productTags ProductTag[]
+
+  productDiscounts ProductDiscount[]
+
+  @@map("products")
+}
+
+model Color {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100) @unique
+  value     String   @db.VarChar(10) // e.g. "#000000"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+
+  @@unique([name, value])
+  @@map("colors")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(100) 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Size {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(50) // e.g. S, M, L, XL
+  value     String   @db.VarChar(50) // e.g. "Small", "Medium"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+
+  @@map("sizes")
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  url       String   @db.Text
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@map("images")
+}
+
+model Tag {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique @db.VarChar(100)
+  productTags ProductTag[]
+}
+
+model ProductTag {
+  productId Int
+  tagId     Int
+
+  product Product @relation(fields: [productId], references: [id])
+  tag     Tag     @relation(fields: [tagId], references: [id])
+
+  @@id([productId, tagId])
+}
+
+model Discount {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(100) @unique
+  description String?   @db.Text
+  amount      Float
+  isPercent   Boolean   @default(true)
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  productDiscounts ProductDiscount[]
+}
+
+model ProductDiscount {
+  productId  Int
+  discountId Int
+
+  product  Product  @relation(fields: [productId], references: [id])
+  discount Discount @relation(fields: [discountId], references: [id])
+
+  @@id([productId, discountId])
+  @@map("product_discounts")
+}
