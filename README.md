@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# E-Commerce Admin Dashboard with Automated Testing
 
-## Getting Started
+![E-Commerce Admin Dashboard](https://placehold.co/600x400/png)
 
-First, run the development server:
+Sebuah **Dashboard Admin E-Commerce** untuk mengelola produk, kategori, warna, dan diskon, dengan fokus pada **Quality Assurance (QA)** melalui pengujian otomatis.
+
+---
+
+## Deskripsi
+
+Project ini adalah dashboard admin yang menyediakan interface untuk mengelola konten produk e-commerce seperti produk, kategori, warna, dan diskon.  
+Fokus utama project ini adalah menerapkan **Automated Testing** menggunakan **Selenium (End-to-End Testing)** , **Playwright (End-to-End Testing)** untuk memastikan semua fungsi berjalan dengan baik dan bebas bug.
+
+---
+
+## Tech Stack
+
+- **Next.js** — Framework React modern untuk frontend dan backend API
+- **Tailwind CSS** — Utility-first CSS framework untuk styling
+- **Prisma ORM** — ORM untuk database management (PostgreSQL)
+- **Playwright** — Framework Automated E2E Testing
+- **PostgreSQL** — Database relasional
+
+---
+
+## Instalasi dan Setup
+
+1. Clone repository ini
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git clone https://github.com/aldifhrent/e-commerce-testing-admin-app.git
+cd e-commerce-testing-admin-app
