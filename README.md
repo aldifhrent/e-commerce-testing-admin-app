@@ -1,6 +1,6 @@
 # E-Commerce Admin Dashboard with Automated Testing
 
-![E-Commerce Admin Dashboard](https://placehold.co/600x400/png)
+![E-Commerce Admin Dashboard]
 
 Sebuah **Dashboard Admin E-Commerce** untuk mengelola produk, kategori, warna, dan diskon, dengan fokus pada **Quality Assurance (QA)** melalui pengujian otomatis.
 
