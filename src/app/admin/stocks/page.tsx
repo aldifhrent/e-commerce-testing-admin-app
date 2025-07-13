@@ -20,8 +20,10 @@ export default function StocksPage() {
         if (!res.ok) throw new Error("Failed to fetch stocks");
         const data = await res.json();
         setStocks(data);
-      } catch (err: any) {
-        setError(err.message || "Unknown error");
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message || "Unknown error");
+        }
       } finally {
         setLoading(false);
       }
@@ -41,9 +43,15 @@ export default function StocksPage() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">ID</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Nama Produk</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">Stok</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">
+                ID
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">
+                Nama Produk
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-600">
+                Stok
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">

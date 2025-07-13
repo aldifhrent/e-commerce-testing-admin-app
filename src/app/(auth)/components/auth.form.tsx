@@ -245,12 +245,12 @@ export default function AuthForm({
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
-          {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+          {isSignUp ? "Already have an account?" : ""}{" "}
           <a
             href={isSignUp ? "/sign-in" : "/sign-up"}
             className="text-blue-600 hover:text-blue-500 font-medium"
           >
-            {isSignUp ? "Sign in" : "Sign up"}
+            {isSignUp ? "Sign in" : ""}
           </a>
         </p>
       </div>

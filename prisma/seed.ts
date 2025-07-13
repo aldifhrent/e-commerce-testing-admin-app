@@ -86,68 +86,64 @@ async function main() {
     },
   })
 
-  // Seed product
-  await prisma.product.upsert({
+  // Cek apakah product sudah ada
+  const existingProduct = await prisma.product.findUnique({
     where: { name: 'Smartphone XYZ' },
-    update: {
-      description: 'Smartphone dengan fitur lengkap dan harga terjangkau.',
-      price: 2500000,
-      stock: 100,
-      categoryId: category.id,
-      colorId: color.id,
-      sizeId: size.id,
-      isArchived: false,
-      isFeatured: true,
-      images: {
-        deleteMany: {},
-        create: [
-          { url: 'https://example.com/images/smartphone-xyz-front.jpg' },
-          { url: 'https://example.com/images/smartphone-xyz-back.jpg' },
-        ],
-      },
-      productTags: {
-        deleteMany: {},
-        create: [
-          { tagId: tag1.id },
-          { tagId: tag2.id },
-        ],
-      },
-      productDiscounts: {
-        deleteMany: {},
-        create: [
-          { discountId: discount.id },
-        ],
-      },
-    },
-    create: {
-      name: 'Smartphone XYZ',
-      description: 'Smartphone dengan fitur lengkap dan harga terjangkau.',
-      price: 2500000,
-      stock: 100,
-      categoryId: category.id,
-      colorId: color.id,
-      sizeId: size.id,
-      isArchived: false,
-      isFeatured: true,
-      images: {
-        create: [
-          { url: 'https://example.com/images/smartphone-xyz-front.jpg' },
-          { url: 'https://example.com/images/smartphone-xyz-back.jpg' },
-        ],
-      },
-      productTags: {
-        create: [
-          { tagId: tag1.id },
-          { tagId: tag2.id },
-        ],
-      },
-      productDiscounts: {
-        create: [
-          { discountId: discount.id },
-        ],
-      },
+    include: {
+      images: true,
+      productTags: true,
+      productDiscounts: true,
     },
   })
+
+  if (!existingProduct) {
+    // Buat baru product sekaligus nested create
+    await prisma.product.create({
+      data: {
+        name: 'Smartphone XYZ',
+        description: 'Smartphone dengan fitur lengkap dan harga terjangkau.',
+        price: 2500000,
+        stock: 100,
+        categoryId: category.id,
+        colorId: color.id,
+        sizeId: size.id,
+        isArchived: false,
+        isFeatured: true,
+        images: {
+          create: [
+            { url: 'https://example.com/images/smartphone-xyz-front.jpg' },
+            { url: 'https://example.com/images/smartphone-xyz-back.jpg' },
+          ],
+        },
+        productTags: {
+          create: [
+            { tagId: tag1.id },
+            { tagId: tag2.id },
+          ],
+        },
+        productDiscounts: {
+          create: [
+            { discountId: discount.id },
+          ],
+        },
+      },
+    })
+  } else {
+    // Kalau sudah ada, update sederhana tanpa nested update yang kompleks
+    await prisma.product.update({
+      where: { id: existingProduct.id },
+      data: {
+        description: 'Smartphone dengan fitur lengkap dan harga terjangkau.',
+        price: 2500000,
+        stock: 100,
+        categoryId: category.id,
+        colorId: color.id,
+        sizeId: size.id,
+        isArchived: false,
+        isFeatured: true,
+      },
+    })
+  }
 
   console.log('Seeding selesai')
 }

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-arm64-openssl-1.0.x"]
@@ -88,13 +82,13 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-// Product Related
+// --- Product Related Models ---
 
 model Product {
   id          Int      @id @default(autoincrement())
   name        String   @db.VarChar(255)  @unique
   description String   @db.Text
-  price       Int // in smallest currency unit, e.g. rupiah
+  price       Float   // bisa pakai Float untuk harga dengan pecahan
   stock       Int
   isArchived  Boolean  @default(false)
   isFeatured  Boolean  @default(false)
@@ -111,9 +105,8 @@ model Product {
   sizeId Int
   size   Size @relation(fields: [sizeId], references: [id])
 
-  images      Image[]
-  productTags ProductTag[]
-
+  images          Image[]
+  productTags     ProductTag[]
   productDiscounts ProductDiscount[]
 
   @@map("products")
@@ -122,7 +115,7 @@ model Product {
 model Color {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(100) @unique
-  value     String   @db.VarChar(10) // e.g. "#000000"
+  value     String   @db.VarChar(10) // Contoh: "#000000"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -134,7 +127,7 @@ model Color {
 
 model Category {
   id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(100) 
+  name      String   @unique @db.VarChar(100)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -145,8 +138,8 @@ model Category {
 
 model Size {
   id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(50) // e.g. S, M, L, XL
-  value     String   @db.VarChar(50) // e.g. "Small", "Medium"
+  name      String   @unique @db.VarChar(50) // Contoh: S, M, L, XL
+  value     String   @db.VarChar(50)         // Contoh: "Small", "Medium"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
