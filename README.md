@@ -1,7 +1,5 @@
 # E-Commerce Admin Dashboard with Automated Testing
 
-![E-Commerce Admin Dashboard]
-
 Sebuah **Dashboard Admin E-Commerce** untuk mengelola produk, kategori, warna, dan diskon, dengan fokus pada **Quality Assurance (QA)** melalui pengujian otomatis.
 
 ---
